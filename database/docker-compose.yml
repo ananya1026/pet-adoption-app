@@ -1,0 +1,18 @@
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: petadopt-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - petadopt-network
+
+volumes:
+  mongo_data:
+
+networks:
+  petadopt-network:
+    external: true

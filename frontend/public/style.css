@@ -1,0 +1,123 @@
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Background Gradient */
+body {
+  background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e, #fad0c4);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+  min-height: 100vh;
+  color: #333;
+}
+
+/* Animate background */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Navigation */
+nav {
+  background: rgba(0,0,0,0.7);
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  border-radius: 0 0 15px 15px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav a:hover {
+  color: #ffd369;
+}
+
+/* Header */
+header {
+  text-align: center;
+  padding: 2rem;
+  color: #222;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.controls input,
+.controls select,
+.controls button {
+  padding: 0.7rem;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+.controls button {
+  background: #ff6b6b;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.controls button:hover {
+  background: #e63946;
+}
+
+/* Pet Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.pet-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.pet-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Pet Images */
+.pet-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;   /* keeps faces visible */
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border-radius: 15px 15px 0 0;
+}

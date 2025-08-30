@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Pets - Petadopt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #d4f4dd 0%, #f8c8b6 100%);
+      background-size: cover;
+      min-height: 100vh;
+      color: #333;
+    }
+    nav {
+      background: #1a237e;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 8px 15px;
+      transition: color 0.3s;
+    }
+    nav a:hover {
+      color: #4caf50;
+    }
+    nav a.active {
+      border-bottom: 3px solid #4caf50;
+    }
+    nav a.admin-link {
+      display: none;
+    }
+    h2 {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 30px 0;
+      color: #1a237e;
+      font-size: 2rem;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    .controls {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .controls input, .controls select, .controls button {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      background: #f9f9f9;
+      transition: border-color 0.3s;
+    }
+    .controls input:focus, .controls select:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+    .controls button {
+      background: #f8c8b6;
+      border: none;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: #1a237e;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .controls button:hover {
+      background: #f4a589;
+      transform: scale(1.05);
+    }
+    #pet-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      padding: 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .pet-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      border: 2px solid #4caf50;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      padding-bottom: 20px;
+    }
+    .pet-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+    }
+    .pet-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 2px solid #4caf50;
+    }
+    .pet-card h3 {
+      margin: 15px 0 8px;
+      color: #1a237e;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+    }
+    .pet-card p {
+      margin: 6px 10px;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    .adopt-btn {
+      margin: 15px auto;
+      padding: 12px 25px;
+      background: #f8c8b6;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a237e;
+      display: block;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .adopt-btn:hover:not(:disabled) {
+      background: #f4a589;
+      transform: scale(1.05);
+    }
+    .adopt-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    @media (max-width: 600px) {
+      #pet-list {
+        grid-template-columns: 1fr;
+        padding: 15px;
+      }
+      .pet-card {
+        margin: 0 10px;
+      }
+      h2 {
+        font-size: 1.8rem;
+      }
+      nav {
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+      nav a {
+        font-size: 1rem;
+      }
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .controls input, .controls select, .controls button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="pets.html" class="active">Pets</a>
+    <a href="login.html">Login</a>
+    <a href="register.html">Register</a>
+    <a href="admin.html" class="admin-link">Admin</a>
+  </nav>
+
+  <h2>🐾 Available Pets</h2>
+
+  <!-- Controls -->
+  <section class="controls">
+    <input id="search" placeholder="Search by name, breed or species..." />
+    <select id="filterType">
+      <option value="">All Types</option>
+      <option value="dog">Dog</option>
+      <option value="cat">Cat</option>
+      <option value="rabbit">Rabbit</option>
+      <option value="parrot">Parrot</option>
+      <option value="fish">Fish</option>
+      <option value="turtle">Turtle</option>
+      <option value="bear">Bear</option>
+      <option value="other">Other</option>
+    </select>
+    <button id="refresh">Refresh</button>
+  </section>
+
+  <div id="pet-list"></div>
+
+  <script>
+    // Conditionally show admin link
+    function updateNav() {
+      const token = localStorage.getItem("token");
+      const adminLink = document.querySelector(".admin-link");
+      if (token) {
+        try {
+          const decoded = jwt_decode(token);
+          if (decoded.isAdmin) {
+            adminLink.style.display = "inline";
+          } else {
+            adminLink.style.display = "none";
+          }
+        } catch (err) {
+          console.error("Error decoding token:", err);
+          adminLink.style.display = "none";
+        }
+      } else {
+        adminLink.style.display = "none";
+      }
+    }
+    updateNav();
+
+    const petList = document.getElementById("pet-list");
+    const searchInput = document.getElementById("search");
+    const filterSelect = document.getElementById("filterType");
+    const refreshBtn = document.getElementById("refresh");
+
+    async function loadPets() {
+      try {
+        const res = await fetch(`/api/pets`);
+        const pets = await res.json();
+
+        if (!pets.length) {
+          petList.innerHTML = "<p style='text-align:center; font-family: Roboto, sans-serif; color: #1a237e; font-size: 1.1rem;'>No pets available right now.</p>";
+          return;
+        }
+
+        petList.innerHTML = "";
+        pets.forEach(pet => {
+          const card = document.createElement("div");
+          card.className = "pet-card";
+          card.setAttribute("data-id", pet._id);
+          card.innerHTML = `
+            <img src="${pet.image || 'https://via.placeholder.com/400x200?text=Pet'}" alt="${pet.name}">
+            <h3>${pet.name}</h3>
+            <p><strong>Breed:</strong> ${pet.breed || "N/A"}</p>
+            <p class="species"><strong>Species:</strong> ${pet.species || pet.type || "N/A"}</p>
+            <p><strong>Age:</strong> ${pet.age ? (pet.age < 1 ? Math.round(pet.age * 12) + " months" : pet.age + " years") : "Unknown"}</p>
+            <p><strong>Behavior:</strong> ${pet.behavior || "Friendly"}</p>
+            <button class="adopt-btn" data-id="${pet._id}" ${pet.status === "adopted" ? "disabled" : ""}>${pet.status === "adopted" ? "Adopted" : "Adopt"}</button>
+          `;
+          petList.appendChild(card);
+        });
+
+        // Adopt button logic
+        document.querySelectorAll(".adopt-btn").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const petId = btn.getAttribute("data-id");
+            const token = localStorage.getItem("token");
+            if (!token) {
+              alert("⚠ Please login to adopt.");
+              window.location.href = "login.html";
+              return;
+            }
+            try {
+              const res = await fetch(`/api/pets/${petId}/adopt`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+              });
+
+              const data = await res.json();
+
+              if (res.ok) {
+                alert("✅ Adoption successful! Pet status updated in DB.");
+                loadPets();
+              } else {
+                alert("❌ " + (data.error || "Failed to adopt."));
+              }
+            } catch (err) {
+              console.error("Adoption error:", err);
+              alert("⚠️ Something went wrong. Check if you're logged in.");
+            }
+          });
+        });
+      } catch (err) {
+        console.error("Error loading pets:", err);
+        petList.innerHTML = "<p style='text-align:center; font-family: Roboto, sans-serif; color: #e63939; font-size: 1.1rem;'>Failed to load pets.</p>";
+      }
+    }
+
+    function filterPets() {
+      const searchText = searchInput.value.toLowerCase();
+      const filterType = filterSelect.value.toLowerCase();
+      const cards = document.querySelectorAll(".pet-card");
+
+      cards.forEach(card => {
+        const name = card.querySelector("h3").textContent.toLowerCase();
+        const species = card.querySelector(".species").textContent.toLowerCase();
+
+        const matchSearch =
+          name.includes(searchText) ||
+          species.includes(searchText) ||
+          card.textContent.toLowerCase().includes(searchText);
+
+        const matchType = !filterType || species.includes(filterType);
+
+        card.style.display = matchSearch && matchType ? "block" : "none";
+      });
+    }
+
+    searchInput.addEventListener("input", filterPets);
+    filterSelect.addEventListener("change", filterPets);
+
+    refreshBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      filterSelect.value = "";
+      document.querySelectorAll(".pet-card").forEach(card => (card.style.display = "block"));
+    });
+
+    loadPets();
+  </script>
+</body>
+</html>

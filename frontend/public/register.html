@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register – Petadopt</title>
+  <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #f6d365, #fda085);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    nav {
+      background: rgba(0,0,0,0.7);
+      padding: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      color: #ffd369;
+    }
+    nav a.active {
+      border-bottom: 2px solid #ffd369;
+    }
+    nav a.admin-link {
+      display: none;
+    }
+    main.form-page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    main h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    main p {
+      margin-bottom: 20px;
+      color: #555;
+    }
+    .form-card {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 400px;
+    }
+    .form-card label {
+      margin-bottom: 15px;
+      text-align: left;
+      font-weight: bold;
+      color: #444;
+    }
+    .form-card input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    .form-card button {
+      margin-top: 15px;
+      padding: 12px;
+      background: #ffd369;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .form-card button:hover {
+      background: #ffb347;
+    }
+    .form-card a {
+      color: #ffd369;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="pets.html">Pets</a>
+    <a href="login.html">Login</a>
+    <a href="register.html" class="active">Register</a>
+    <a href="admin.html" class="admin-link">Admin</a>
+  </nav>
+
+  <main class="form-page">
+    <h1>Create an Account</h1>
+    <p>Join Petadopt and find your forever friend 🐾</p>
+
+    <form id="registerForm" class="form-card">
+      <label>
+        Full Name
+        <input type="text" name="name" placeholder="Your Name" required />
+      </label>
+      <label>
+        Email
+        <input type="email" name="email" placeholder="you@example.com" required />
+      </label>
+      <label>
+        Password
+        <input type="password" name="password" placeholder="Enter password" required />
+      </label>
+      <button type="submit">Register</button>
+    </form>
+
+    <p>Already have an account? <a href="login.html">Login here</a></p>
+  </main>
+
+  <script>
+    // Conditionally show admin link
+    function updateNav() {
+      const token = localStorage.getItem("token");
+      const adminLink = document.querySelector(".admin-link");
+      if (token) {
+        try {
+          const decoded = jwt_decode(token);
+          if (decoded.isAdmin) {
+            adminLink.style.display = "inline";
+          } else {
+            adminLink.style.display = "none";
+          }
+        } catch (err) {
+          console.error("Error decoding token:", err);
+          adminLink.style.display = "none";
+        }
+      } else {
+        adminLink.style.display = "none";
+      }
+    }
+    updateNav();
+
+    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        name: form.name.value,
+        email: form.email.value,
+        password: form.password.value
+      };
+
+      try {
+        const res = await fetch(`/api/auth/register`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        const resData = await res.json();
+
+        if (res.ok) {
+          alert("✅ Registration successful! You can now log in.");
+          window.location.href = "login.html";
+        } else {
+          alert(`⚠ Registration failed: ${resData.error || "Unknown error"}`);
+        }
+      } catch (err) {
+        alert("❌ Error connecting to server.");
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

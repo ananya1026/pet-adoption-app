@@ -1,0 +1,19 @@
+# Sensitive files with passwords
+.env
+backend/.env
+
+# Node.js dependencies (for backend, if using Node.js)
+node_modules/
+backend/node_modules/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Database dumps (may contain real data)
+database/*.sql
+database/dumps/
+
+# OS junk
+.DS_Store
+Thumbs.db

@@ -1,0 +1,18 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: petadopt-frontend
+    restart: unless-stopped
+    ports:
+      - "9090:80"
+    volumes:
+      - ./frontend/public:/usr/share/nginx/html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - petadopt-network
+
+networks:
+  petadopt-network:
+    driver: bridge

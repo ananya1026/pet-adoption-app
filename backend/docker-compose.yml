@@ -1,0 +1,20 @@
+services:
+  backend:
+    build: ./backend
+    container_name: petadopt-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://10.0.31.83:27017/petadopt-mongo
+      - JWT_SECRET=630698f29514e7531a6fcc6dfb5cf9f5eca102e1c942b97eeac58900545f81cc
+      - NODE_ENV=development
+    networks:
+      - petadopt-network
+
+networks:
+  petadopt-network:
+    external: true
+volumes:
+  mongo_data:
