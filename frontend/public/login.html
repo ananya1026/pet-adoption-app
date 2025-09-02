@@ -2,86 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login - Petadopt</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #f8b195, #f67280, #c06c84, #6c5b7b, #355c7d);
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    nav {
-      background: rgba(0,0,0,0.6);
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      color: #ffd369;
-    }
-    nav a.active {
-      border-bottom: 2px solid #ffd369;
-    }
-    nav a.admin-link {
-      display: none;
-    }
-    .login-container {
-      margin: auto;
-      padding: 40px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 15px;
-      text-align: center;
-      max-width: 350px;
-      box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
-    }
-    .login-container h2 {
-      margin-bottom: 10px;
-    }
-    .login-container p {
-      margin-bottom: 20px;
-      font-size: 14px;
-    }
-    .login-form input {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 8px;
-      outline: none;
-    }
-    .login-form button {
-      width: 100%;
-      padding: 12px;
-      background: #ffd369;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .login-form button:hover {
-      background: #ffb347;
-    }
-    .register-link {
-      margin-top: 15px;
-      font-size: 14px;
-    }
-    .register-link a {
-      color: #ffd369;
-      font-weight: bold;
-    }
-  </style>
 </head>
 <body>
   <nav>
@@ -93,20 +18,24 @@
   </nav>
 
   <main class="login-container">
-    <h2>Welcome Back 🐾</h2>
+    <h1>Welcome Back 🐾</h1>
     <p>Login to continue exploring pets near you</p>
-
-    <form id="loginForm" class="login-form">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
+    <form id="loginForm" class="form-card">
+      <label>
+        Email
+        <input type="email" id="email" placeholder="you@example.com" required />
+      </label>
+      <label>
+        Password
+        <input type="password" id="password" placeholder="Enter password" required />
+      </label>
       <button type="submit">Login</button>
     </form>
-
     <p class="register-link">Don’t have an account? <a href="register.html">Register</a></p>
   </main>
 
+  <script src="app.js"></script>
   <script>
-    // Conditionally show admin link
     function updateNav() {
       const token = localStorage.getItem("token");
       const adminLink = document.querySelector(".admin-link");
@@ -127,41 +56,6 @@
       }
     }
     updateNav();
-
-    document.getElementById("loginForm").addEventListener("submit", async function (e) {
-      e.preventDefault();
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!email || !password) {
-        alert("⚠ Please enter both email and password.");
-        return;
-      }
-
-      try {
-        const res = await fetch(`/api/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-          alert(`❌ ${data.error || "Invalid credentials"}`);
-          return;
-        }
-
-        // Save JWT to localStorage
-        localStorage.setItem("token", data.token);
-        alert("✅ Login successful! Redirecting to pets...");
-        window.location.href = "pets.html";
-      } catch (err) {
-        alert("❌ Network error. Try again later.");
-        console.error(err);
-      }
-    });
   </script>
 </body>
 </html>

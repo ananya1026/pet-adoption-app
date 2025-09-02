@@ -1,7 +1,7 @@
 // backend/src/middleware/auth.js
 import jwt from "jsonwebtoken";
 
-const JWT_SECRET = process.env.JWT_SECRET || "mysecretkey"; // Fallback for development
+const JWT_SECRET = process.env.JWT_SECRET || "30698f29514e7531a6fcc6dfb5cf9f5eca102e1c942b97eeac58900545f81cc"; // Fallback for development
 
 export default function auth(req, res, next) {
   const authHeader = req.headers["authorization"];

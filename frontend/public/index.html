@@ -6,197 +6,9 @@
   <title>Petadopt – Find Your New Best Friend</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-  <!-- Include jwt-decode library for parsing JWT -->
   <script src="https://unpkg.com/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      min-height: 100vh;
-      color: #333;
-    }
-    nav {
-      background: #263238;
-      padding: 15px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      font-family: 'Poppins', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      padding: 6px 12px;
-      transition: color 0.3s;
-    }
-    nav a:hover {
-      color: #4caf50;
-    }
-    nav a.active {
-      border-bottom: 3px solid #4caf50;
-    }
-    header {
-      text-align: center;
-      padding: 40px 20px;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    header h1 {
-      font-family: 'Poppins', sans-serif;
-      color: #263238;
-      font-size: 2.5rem;
-      margin: 0;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-    }
-    header p {
-      font-size: 1.2rem;
-      color: #555;
-      margin: 10px 0;
-    }
-    .controls {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 0 20px;
-      display: flex;
-      gap: 15px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .controls input, .controls select, .controls button {
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-family: 'Roboto', sans-serif;
-      font-size: 1rem;
-      background: #f9f9f9;
-      transition: border-color 0.3s;
-    }
-    .controls input:focus, .controls select:focus {
-      border-color: #4caf50;
-      outline: none;
-    }
-    .controls button {
-      background: #f8c8b6;
-      border: none;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 600;
-      color: #263238;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .controls button:hover {
-      background: #f4a589;
-      transform: scale(1.05);
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 25px;
-      padding: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-    .pet-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
-      border: 2px solid #4caf50;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      text-align: center;
-      padding-bottom: 20px;
-    }
-    .pet-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
-    }
-    .pet-card img {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-bottom: 2px solid #4caf50;
-    }
-    .pet-card h3 {
-      margin: 15px 0 8px;
-      color: #263238;
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.5rem;
-    }
-    .pet-card p {
-      margin: 6px 10px;
-      color: #555;
-      font-size: 0.95rem;
-    }
-    .pet-card .adopt-btn {
-      margin: 15px auto;
-      padding: 12px 25px;
-      background: #f8c8b6;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #263238;
-      display: block;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .pet-card .adopt-btn:hover:not(:disabled) {
-      background: #f4a589;
-      transform: scale(1.05);
-    }
-    .pet-card .adopt-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      background: rgba(212, 244, 221, 0.3);
-      margin-top: 20px;
-    }
-    footer small {
-      font-family: 'Roboto', sans-serif;
-      color: #263238;
-      font-size: 0.9rem;
-    }
-    @media (max-width: 600px) {
-      .grid {
-        grid-template-columns: 1fr;
-        padding: 15px;
-      }
-      .pet-card {
-        margin: 0 10px;
-      }
-      header h1 {
-        font-size: 2rem;
-      }
-      nav {
-        flex-wrap: wrap;
-        gap: 15px;
-      }
-      nav a {
-        font-size: 0.9rem;
-        padding: 5px 10px;
-      }
-      .controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .controls input, .controls select, .controls button {
-        width: 100%;
-      }
-    }
-    /* Hide admin link by default */
-    nav a.admin-link {
-      display: none;
-    }
-  </style>
 </head>
 <body>
-  <!-- Navigation -->
   <nav>
     <a href="index.html" class="active">Home</a>
     <a href="pets.html">Pets</a>
@@ -205,99 +17,36 @@
     <a href="admin.html" class="admin-link">Admin</a>
   </nav>
 
-  <!-- Header -->
   <header>
     <h1>🐾 Petadopt</h1>
     <p>Adopt, don’t shop. Find pets near you.</p>
   </header>
 
-  <!-- Controls -->
   <section class="controls">
-    <input id="search" placeholder="Search by name, breed or type..." />
+    <input id="search" placeholder="Search by name, breed or species..." />
     <select id="filterType">
       <option value="">All Types</option>
       <option value="dog">Dog</option>
       <option value="cat">Cat</option>
       <option value="rabbit">Rabbit</option>
+      <option value="parrot">Parrot</option>
+      <option value="fish">Fish</option>
+      <option value="turtle">Turtle</option>
       <option value="bear">Bear</option>
+      <option value="other">Other</option>
     </select>
     <button id="refresh">Refresh</button>
   </section>
 
-  <!-- Pets Grid -->
-  <section id="pets" class="grid">
-    <div class="pet-card" data-id="670000000000000000000001">
-      <img src="https://images6.alphacoders.com/678/678636.jpg" alt="Buddy the Golden Retriever" />
-      <h3>Buddy</h3>
-      <p><strong>Breed:</strong> Golden Retriever</p>
-      <p class="species"><strong>Species:</strong> Dog</p>
-      <p><strong>Age:</strong> 2 years</p>
-      <p><strong>Behavior:</strong> Loyal, playful, loves people</p>
-      <button class="adopt-btn" data-id="670000000000000000000001">Adopt</button>
-    </div>
+  <section id="pets" class="grid"></section>
 
-    <div class="pet-card" data-id="670000000000000000000002">
-      <img src="https://wallpapers.com/images/hd/kitten-pictures-gk8apx09lgy493tc.jpg" alt="Luna the Persian Cat" />
-      <h3>Luna</h3>
-      <p><strong>Breed:</strong> Persian Cat</p>
-      <p class="species"><strong>Species:</strong> Cat</p>
-      <p><strong>Age:</strong> 1 year</p>
-      <p><strong>Behavior:</strong> Calm, cuddly, indoor-friendly</p>
-      <button class="adopt-btn" data-id="670000000000000000000002">Adopt</button>
-    </div>
-
-    <div class="pet-card" data-id="670000000000000000000003">
-      <img src="https://hips.hearstapps.com/hmg-prod/images/rabbit-breeds-american-white-1553635287.jpg" alt="Snowball the Rabbit" />
-      <h3>Snowball</h3>
-      <p><strong>Breed:</strong> White Rabbit</p>
-      <p class="species"><strong>Species:</strong> Rabbit</p>
-      <p><strong>Age:</strong> 8 months</p>
-      <p><strong>Behavior:</strong> Gentle, curious, loves carrots</p>
-      <button class="adopt-btn" data-id="670000000000000000000003">Adopt</button>
-    </div>
-
-    <div class="pet-card" data-id="670000000000000000000004">
-      <img src="http://images.unsplash.com/photo-1552032345-a73a5d0462ac?ixlib=rb-1.2.1&q=80" alt="Max the Black Cat" />
-      <h3>Max</h3>
-      <p><strong>Breed:</strong> Black Cat</p>
-      <p class="species"><strong>Species:</strong> Cat</p>
-      <p><strong>Age:</strong> 8 months</p>
-      <p><strong>Behavior:</strong> Gentle, curious, friendly</p>
-      <button class="adopt-btn" data-id="670000000000000000000004">Adopt</button>
-    </div>
-
-    <div class="pet-card" data-id="670000000000000000000005">
-      <img src="https://i.redd.it/gh90i7i1pk531.jpg" alt="Sheru the White Dog" />
-      <h3>Sheru</h3>
-      <p><strong>Breed:</strong> White Dog</p>
-      <p class="species"><strong>Species:</strong> Dog</p>
-      <p><strong>Age:</strong> 1 year</p>
-      <p><strong>Behavior:</strong> Gentle, curious, loyal</p>
-      <button class="adopt-btn" data-id="670000000000000000000005">Adopt</button>
-    </div>
-
-    <div class="pet-card" data-id="670000000000000000000006">
-      <img src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/227db030885515.5637c92a73608.jpg" alt="Balu the Polar Bear" />
-      <h3>Balu</h3>
-      <p><strong>Breed:</strong> Polar Bear</p>
-      <p class="species"><strong>Species:</strong> Bear</p>
-      <p><strong>Age:</strong> 1 year</p>
-      <p><strong>Behavior:</strong> Cuddly, playful, loves snow</p>
-      <button class="adopt-btn" data-id="670000000000000000000006">Adopt</button>
-    </div>
-  </section>
-
-  <!-- Footer -->
   <footer>
     <small>© <span id="year"></span> Petadopt</small>
   </footer>
 
-  <!-- App JS -->
+  <script src="app.js"></script>
   <script>
-    // Dynamic year in footer
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Conditionally show admin link
     function updateNav() {
       const token = localStorage.getItem("token");
       const adminLink = document.querySelector(".admin-link");
@@ -317,98 +66,7 @@
         adminLink.style.display = "none";
       }
     }
-
-    // Run on page load
     updateNav();
-
-    const searchInput = document.getElementById("search");
-    const filterSelect = document.getElementById("filterType");
-    const refreshBtn = document.getElementById("refresh");
-    const cards = document.querySelectorAll(".pet-card");
-
-    async function loadPetStatuses() {
-      try {
-        const res = await fetch(`/api/pets`);
-        const pets = await res.json();
-        cards.forEach(card => {
-          const petId = card.getAttribute("data-id");
-          const pet = pets.find(p => p._id === petId);
-          const adoptBtn = card.querySelector(".adopt-btn");
-          if (pet && pet.status === "adopted") {
-            adoptBtn.textContent = "Adopted";
-            adoptBtn.disabled = true;
-          } else {
-            adoptBtn.textContent = "Adopt";
-            adoptBtn.disabled = false;
-          }
-        });
-      } catch (err) {
-        console.error("Error loading pet statuses:", err);
-      }
-    }
-
-    function filterPets() {
-      const searchText = searchInput.value.toLowerCase();
-      const filterType = filterSelect.value.toLowerCase();
-
-      cards.forEach(card => {
-        const name = card.querySelector("h3").textContent.toLowerCase();
-        const species = card.querySelector(".species").textContent.toLowerCase();
-
-        const matchSearch =
-          name.includes(searchText) ||
-          species.includes(searchText) ||
-          card.textContent.toLowerCase().includes(searchText);
-
-        const matchType = !filterType || species.includes(filterType);
-
-        card.style.display = matchSearch && matchType ? "block" : "none";
-      });
-    }
-
-    searchInput.addEventListener("input", filterPets);
-    filterSelect.addEventListener("change", filterPets);
-
-    // Reset search + filter
-    refreshBtn.addEventListener("click", () => {
-      searchInput.value = "";
-      filterSelect.value = "";
-      cards.forEach(card => (card.style.display = "block"));
-    });
-
-    // Adopt button logic
-    document.querySelectorAll(".adopt-btn").forEach(btn => {
-      btn.addEventListener("click", async () => {
-        const petId = btn.getAttribute("data-id");
-        const token = localStorage.getItem("token");
-        if (!token) {
-          alert("⚠ Please login to adopt.");
-          window.location.href = "login.html";
-          return;
-        }
-        try {
-          const res = await fetch(`/api/pets/${petId}/adopt`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-          });
-
-          const data = await res.json();
-
-          if (res.ok) {
-            alert("✅ Adoption successful! Pet status updated in DB.");
-            loadPetStatuses();
-          } else {
-            alert("❌ " + (data.error || "Failed to adopt."));
-          }
-        } catch (err) {
-          console.error("Adoption error:", err);
-          alert("⚠️ Something went wrong. Check if you're logged in.");
-        }
-      });
-    });
-
-    // Load pet statuses on page load
-    loadPetStatuses();
   </script>
 </body>
 </html>

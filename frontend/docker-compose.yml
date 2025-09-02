@@ -16,3 +16,6 @@ services:
 networks:
   petadopt-network:
     driver: bridge
+
+volumes:
+  mongo_data:

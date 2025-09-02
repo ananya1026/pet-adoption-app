@@ -1,13 +1,12 @@
-
 /* Global Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
-/* Background Gradient */
+/* Body */
 body {
   background: linear-gradient(135deg, #ffecd2, #fcb69f, #ff9a9e, #fad0c4);
   background-size: 400% 400%;
@@ -25,34 +24,45 @@ body {
 
 /* Navigation */
 nav {
-  background: rgba(0,0,0,0.7);
+  background: #1a237e;
   padding: 1rem;
   display: flex;
   justify-content: center;
   gap: 2rem;
-  border-radius: 0 0 15px 15px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
 }
-
 nav a {
   color: #fff;
   text-decoration: none;
-  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  transition: color 0.3s;
 }
-
 nav a:hover {
   color: #ffd369;
 }
-
-/* Header */
-header {
-  text-align: center;
-  padding: 2rem;
-  color: #222;
+nav a.active {
+  border-bottom: 3px solid #ffd369;
+}
+nav a.admin-link {
+  display: none;
 }
 
-header h1 {
+/* Header */
+header, h1 {
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  padding: 2rem;
+  color: #1a237e;
   font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+header p {
+  font-size: 1.2rem;
+  color: #555;
+  margin: 0.5rem 0;
 }
 
 /* Controls */
@@ -60,64 +70,222 @@ header h1 {
   display: flex;
   justify-content: center;
   gap: 1rem;
-  margin: 1.5rem 0;
+  margin: 1.5rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+  flex-wrap: wrap;
 }
-
-.controls input,
-.controls select,
-.controls button {
-  padding: 0.7rem;
-  border-radius: 8px;
-  border: none;
+.controls input, .controls select, .controls button {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  transition: border-color 0.3s;
+}
+.controls input:focus, .controls select:focus {
+  border-color: #ffd369;
   outline: none;
 }
-
 .controls button {
-  background: #ff6b6b;
-  color: #fff;
+  background: #ffd369;
+  border: none;
   cursor: pointer;
-  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #1a237e;
+  transition: background 0.3s, transform 0.2s;
 }
-
 .controls button:hover {
-  background: #e63946;
+  background: #ffb347;
+  transform: scale(1.05);
 }
 
-/* Pet Grid */
+/* Grid */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
-  padding: 2rem;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: auto;
 }
 
+/* Pet Card */
 .pet-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  border: 2px solid #ffd369;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
-  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  padding-bottom: 1rem;
 }
-
 .pet-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
-
-/* Pet Images */
 .pet-card img {
   width: 100%;
-  height: 220px;
-  object-fit: cover;   /* keeps faces visible */
+  height: 300px;
+  object-fit: cover;
+  border-bottom: 2px solid #ffd369;
+}
+.pet-card h3 {
+  margin: 1rem 0 0.5rem;
+  color: #1a237e;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+}
+.pet-card p {
+  margin: 0.4rem 0.6rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+.pet-card .adopt-btn, .pet-card .delete {
+  margin: 1rem auto;
+  padding: 0.8rem 1.5rem;
+  background: #ffd369;
+  border: none;
   border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a237e;
+  transition: background 0.3s, transform 0.2s;
+}
+.pet-card .adopt-btn:hover:not(:disabled), .pet-card .delete:hover {
+  background: #ffb347;
+  transform: scale(1.05);
+}
+.pet-card .adopt-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.pet-card .delete {
+  background: #ff6b6b;
+}
+.pet-card .delete:hover {
+  background: #e63939;
+}
+
+/* Form Card */
+.form-card {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  margin: 1.5rem auto;
+  max-width: 600px;
+  transition: transform 0.3s ease;
+}
+.form-card:hover {
+  transform: translateY(-5px);
+}
+.form-card h1 {
+  font-size: 1.8rem;
   margin-bottom: 1rem;
+}
+.form-card label {
+  display: block;
+  margin: 0.8rem 0 0.4rem;
+  font-weight: 500;
+  color: #1a237e;
+}
+.form-card input, .form-card select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #f9f9f9;
+  transition: border-color 0.3s;
+}
+.form-card input:focus, .form-card select:focus {
+  border-color: #ffd369;
+  outline: none;
+}
+.form-card button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  background: #ffd369;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a237e;
+  transition: background 0.3s, transform 0.2s;
+}
+.form-card button:hover {
+  background: #ffb347;
+  transform: scale(1.05);
+}
+.form-card p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #555;
+  text-align: center;
+}
+
+/* Login Container */
+.login-container {
+  margin: auto;
+  max-width: 400px;
+  text-align: center;
+}
+.login-container p {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  color: #333;
+  text-align: center;
+}
+
+/* Register Page Specific Styling */
+body[page="register"] .form-page p {
+  text-align: center; /* Target all <p> tags under .form-page on register.html */
+  margin: 1rem auto;
 }
 
 /* Footer */
 footer {
   text-align: center;
   padding: 1rem;
-  background: rgba(0,0,0,0.6);
-  color: white;
-  border-radius: 15px 15px 0 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  margin-top: 1rem;
+}
+footer small {
+  font-size: 0.9rem;
+}
+
+/* Media Queries */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+  .pet-card, .form-card {
+    margin: 1rem;
+  }
+  nav {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  nav a {
+    font-size: 1rem;
+  }
+  h1 {
+    font-size: 2rem;
+  }
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .controls input, .controls select, .controls button {
+    width: 100%;
+  }
 }

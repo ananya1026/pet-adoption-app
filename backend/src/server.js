@@ -3,9 +3,12 @@ import mongoose from "mongoose";
 import cors from "cors";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { body, param, validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import dotenv from "dotenv";
 import crypto from "crypto";
+import User from "./models/User.js";
+import Pet from "./models/Pet.js";
+import Application from "./models/Application.js";
 
 dotenv.config();
 
@@ -15,7 +18,7 @@ app.use(express.json());
 
 // Configuration
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || "mongodb://10.0.31.83:27017/petadopt-mongo";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/petdb"; // Default to localhost; update .env if needed
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString("hex");
 
 // MongoDB Connection
@@ -29,48 +32,6 @@ mongoose
     console.error("❌ MongoDB Error:", err.message);
     process.exit(1);
   });
-
-// Models
-const UserSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true, trim: true },
-    email: { type: String, unique: true, required: true, trim: true },
-    password: { type: String, required: true },
-    isAdmin: { type: Boolean, default: false },
-  },
-  { timestamps: true }
-);
-const User = mongoose.model("User", UserSchema);
-
-const PetSchema = new mongoose.Schema(
-  {
-    name: { type: String, required: true, trim: true },
-    type: { type: String, enum: ["Dog", "Cat", "Rabbit", "Parrot", "Fish", "Turtle", "Bear", "Other"], default: "Other" },
-    species: { type: String, trim: true },
-    breed: { type: String, trim: true },
-    age: { type: Number, min: 0 },
-    behavior: { type: String, trim: true },
-    image: { type: String, trim: true },
-    description: { type: String, trim: true },
-    status: { type: String, enum: ["available", "adopted"], default: "available" },
-    adoptedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-  },
-  { timestamps: true }
-);
-const Pet = mongoose.model("Pet", PetSchema);
-
-const ApplicationSchema = new mongoose.Schema(
-  {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    petId: { type: mongoose.Schema.Types.ObjectId, ref: "Pet", required: true },
-    status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" },
-    message: { type: String, trim: true },
-    appliedAt: { type: Date, default: Date.now },
-    approvedAt: { type: Date },
-  },
-  { timestamps: true }
-);
-const Application = mongoose.model("Application", ApplicationSchema);
 
 // Middleware
 const auth = (req, res, next) => {
@@ -99,13 +60,18 @@ const admin = async (req, res, next) => {
     console.error("❌ Admin middleware: No user in request");
     return res.status(401).json({ error: "Authentication required" });
   }
-  const user = await User.findById(req.user.id);
-  if (!user || !user.isAdmin) {
-    console.error(`❌ Admin middleware: User ${req.user.id} lacks admin privileges`);
-    return res.status(403).json({ error: "Admin access required" });
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user || !user.isAdmin) {
+      console.error(`❌ Admin middleware: User ${req.user.id} lacks admin privileges`);
+      return res.status(403).json({ error: "Admin access required" });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error("❌ Admin middleware: Error fetching user", err.message);
+    res.status(500).json({ error: "Internal server error" });
   }
-  req.user = user; // Update req.user with full user document
-  next();
 };
 
 // Auth Routes
@@ -128,7 +94,7 @@ app.post(
       res.json({ message: "User registered successfully", userId: user._id });
     } catch (err) {
       console.error("❌ Registration error:", err.message);
-      res.status(500).json({ error: "Registration failed" });
+      res.status(500).json({ error: `Registration failed: ${err.message}` });
     }
   }
 );
@@ -152,10 +118,21 @@ app.post(
       res.json({ message: "Login successful", token, user: { id: user._id, name: user.name, email: user.email, isAdmin: user.isAdmin } });
     } catch (err) {
       console.error("❌ Login error:", err.message);
-      res.status(500).json({ error: "Login failed" });
+      res.status(500).json({ error: `Login failed: ${err.message}` });
     }
   }
 );
+
+// Admin Route
+app.get("/admin", auth, admin, async (req, res) => {
+  try {
+    const pets = await Pet.find();
+    res.json({ message: "Admin panel data", pets });
+  } catch (err) {
+    console.error("❌ Error fetching admin data:", err.message);
+    res.status(500).json({ error: `Failed to fetch admin data: ${err.message}` });
+  }
+});
 
 // Pets Routes
 app.get("/api/pets", async (req, res) => {
@@ -164,7 +141,7 @@ app.get("/api/pets", async (req, res) => {
     res.json(pets);
   } catch (err) {
     console.error("❌ Error fetching pets:", err.message);
-    res.status(500).json({ error: "Failed to fetch pets" });
+    res.status(500).json({ error: `Failed to fetch pets: ${err.message}` });
   }
 });
 
@@ -196,7 +173,7 @@ app.post(
       res.json({ message: "Pet created successfully", petId: pet._id });
     } catch (err) {
       console.error("❌ Error creating pet:", err.message);
-      res.status(500).json({ error: "Failed to create pet" });
+      res.status(500).json({ error: `Failed to create pet: ${err.message}` });
     }
   }
 );
@@ -212,7 +189,7 @@ app.post("/api/pets/:id/adopt", auth, async (req, res) => {
     res.json({ message: "Pet adopted successfully!", pet });
   } catch (err) {
     console.error("❌ Error adopting pet:", err.message);
-    res.status(500).json({ error: "Failed to adopt pet" });
+    res.status(500).json({ error: `Failed to adopt pet: ${err.message}` });
   }
 });
 

@@ -1,10 +1,12 @@
 # Sensitive files with passwords
 .env
 backend/.env
+database/.env
 
 # Node.js dependencies (for backend, if using Node.js)
 node_modules/
 backend/node_modules/
+database/node_modules/
 
 # Logs and temp files
 *.log
