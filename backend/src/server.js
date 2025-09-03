@@ -18,7 +18,7 @@ app.use(express.json());
 
 // Configuration
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/petdb"; // Default to localhost; update .env if needed
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://kumariananya223_db_user:user%40223%24db@petadoptioncluster.8hyf64a.mongodb.net/petdb?retryWrites=true&w=majority&appName=PetAdoptionCluster"; // Default to localhost; update .env if needed
 const JWT_SECRET = process.env.JWT_SECRET || crypto.randomBytes(32).toString("hex");
 
 // MongoDB Connection
